@@ -1,0 +1,1 @@
+function CloseMonitorScreenMonitorWindowGlobalsif ~isempty(MonitorWindow),	temp = MonitorWindow;	MonitorWindow = [];	try,		screen(temp,'close');	end;else, MonitorWindow = [];end;

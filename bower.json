@@ -1,0 +1,13 @@
+{
+  "name": "vhlab_NewStim",
+  "homepage": "https://github.com/VH-Lab/vhlab_NewStim",
+  "authors": [
+    "[Stephen D. Van Hooser] <[vanhoosr@brandeis.edu]>"
+  ],
+  "description": "A visual (and auditory) stimulus suite for Matlab that relies on Psychtoolbox",
+  "main": "",
+  "license": "MIT",
+  "dependencies": {
+	  "vhlab_toolbox": "git://github.com/VH-Lab/vhlab_toolbox.git"
+  }
+}
