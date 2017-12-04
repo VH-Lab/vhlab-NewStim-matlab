@@ -2,6 +2,8 @@ function [outstim] = loadstim(CSSstim)
 
 disp(['got here in centersurroundstim']);
 
+warning(['This function probably will not work in PTB3, need to get rid of color table animation and make it a movie.']);
+
 CSSstim = unloadstim(CSSstim);
 outstim = CSSstim;
 
@@ -17,20 +19,33 @@ if haspsychtbox,
 	biggestrad = max([CSSparams.radius CSSparams.surrradius]);
 	hasSurround = CSSparams.surrradius>=0;
 	bigRad = biggestrad; if bigRad==0,bigRad=1; end;
+
+	middle=mean([CSSparams.FGc;CSSparams.FGs])/255;
+	fgc=round(255*(middle+CSSparams.contrast*(CSSparams.FGc/255-middle)));
+	fgs=round(255*(middle+CSSparams.contrast*(CSSparams.FGs/255-middle)));
+
 	if NS_PTBv<3,
 		offscreen = screen(-1,'OpenOffscreenWindow',255,2*bigRad*[0 0 1 1]);
 	else,
 		offscreen = Screen('MakeTexture',StimWindow,0*ones(2*bigRad));
 	end;
+
 	if hasSurround,
-		Screen(offscreen,'FillOval',2,biggestrad+CSSparams.surrradius*[-1 -1 1 1]);
+		if NS_PTBv<3,
+			Screen(offscreen,'FillOval',2,biggestrad+CSSparams.surrradius*[-1 -1 1 1]);
+		else,
+			Screen(offscreen,'FillOval',fgs,biggestrad+CSSparams.surrradius*[-1 -1 1 1]);
+		end
 	end;
+
 	if CSSparams.radius>0,
-		Screen(offscreen,'FillOval',1,biggestrad+CSSparams.radius*[-1 -1 1 1]);
+		if NS_PTBv<3,
+			Screen(offscreen,'FillOval',1,biggestrad+CSSparams.radius*[-1 -1 1 1]);
+		else,
+			Screen(offscreen,'FillOval',fgc,biggestrad+CSSparams.radius*[-1 -1 1 1]);
+		end
 	end;
-	middle=mean([CSSparams.FGc;CSSparams.FGs])/255;
-	fgc=round(255*(middle+CSSparams.contrast*(CSSparams.FGc/255-middle)));
-	fgs=round(255*(middle+CSSparams.contrast*(CSSparams.FGs/255-middle)));
+
 
 	ctab{1} = repmat(CSSparams.BG,256,1);
 	ctab{2} = [CSSparams.BG; fgc; repmat(CSSparams.BG,254,1)];
