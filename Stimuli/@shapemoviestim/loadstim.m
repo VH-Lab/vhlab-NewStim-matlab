@@ -14,10 +14,12 @@ width  = p.rect(3) - p.rect(1); height = p.rect(4) - p.rect(2);
 
 vheight = round(height / p.scale); vwidth = round(width / p.scale);
 
+bgimage = cat(3,p.BG(3)*ones(height,width),p.BG(2)*ones(height,width),p.BG(3)*ones(height,width));
+
 if NS_PTBv<3,
 	offscreen = screen(-1,'OpenOffscreenWindow',0,[0 0 width height]);
 else,
-	offscreen = screen('MakeTexture',StimWindow,zeros(height,width));
+	offscreen = screen('MakeTexture',StimWindow,bgimage);
 end;
 clut_bg = repmat(p.BG,256,1);
 depth = 8;
@@ -45,7 +47,7 @@ for i=1:length(nf), % for each set of shapes
 		if NS_PTBv<3,
 			tmpscn=screen(-1,'OpenOffscreenWindow',0,[0 0 vwidth vheight]);
 		else,
-			tmpscn=screen('MakeTexture',StimWindow,zeros(vheight,vwidth));
+			tmpscn=screen('MakeTexture',StimWindow,bgimage);
 		end;
 		shape=nf{i};
 		for j=1:length(shape), % draw the shapes
@@ -108,7 +110,7 @@ for i=1:length(nf), % for each set of shapes
 			offscreen(end+1)=screen(-1,'OpenOffscreenWindow',...
 					0,[0 0 width height]);
 		else,
-			offscreen(end+1)=screen('MakeTexture',StimWindow,zeros(height,width));
+			offscreen(end+1)=screen('MakeTexture',StimWindow,bgimage);
 		end;
 		% blow up the image
 		screen('CopyWindow',tmpscn,offscreen(end),[0 0 vwidth vheight],...
