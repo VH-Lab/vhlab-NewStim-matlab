@@ -55,5 +55,13 @@ if forcetheory,
 			[x,y]=getgrid(sgs);
 			xc_stimstim = repmat(xc_stimstim(:),1,x*y); % 1 column per grid position
 		end;
+    elseif eqlen(size(p.values),[2 3]),
+            alpha = 1;
+    		signal_samples_per_frame = (1/si) / p.fps;
+			n = 0:maxlag;
+			xc_stimstim = step_autocorrelation(alpha, signal_samples_per_frame, n);
+			[x,y]=getgrid(sgs);
+			xc_stimstim = repmat(xc_stimstim(:),1,x*y); % 1 column per grid position
+
 	end;
 end;

@@ -23,8 +23,9 @@ Remote_Comm_eol = '\r';  % End of line, '\r' for MacOS9, '\n' for unix
 Remote_Comm_method = 'filesystem';  % 'sockets' or 'filesystem'
 
 % settings for Remote_Comm_method = 'filesystem'
-Remote_Comm_dir = '/Users/vanhoosr/remote';   % the local directory in which to write
-                                           %   files for the remote computer
+Remote_Comm_dir = '/Users/vanhoosr/remote/';   % the local directory in which to write
+                                               % files for the remote computer
+                                               % should end with filesep ('/' or '\')
 
 % settings for Remote_Comm_method = 'sockets'
 Remote_Comm_host = '152.16.225.216';
@@ -41,11 +42,11 @@ Remote_Comm_port = 1205;
 Remote_Comm_remotearchitecture = 'unix'; % options are 'PC', 'Mac' (MacOS9), or 'unix' (Linux, MacOSX)
  % the computer type of the remote machine you are talking to (not of THIS computer, necessarily)
 
-Remote_Comm_localprefix = '/Users/vanhoosr/remote'; % for example, 'Z:', 'z:', '/Users/Shared/myexperimentdir'
- % the prefix to the shared directory on THIS computer
+Remote_Comm_localprefix = '/Users/vanhoosr/remote/'; % for example, 'Z:\remote\', 'z:\remote\', '/Users/Shared/myexperimentdir/'
+ % the prefix to the shared directory on THIS computer; should end in file separator ('/' or '\')
 
-Remote_Comm_remoteprefix = '/Volumes/VHLabRig2';
-Remote_Comm_remoteprefix = '/Volumes/remote';
+Remote_Comm_remoteprefix = '/Volumes/VHLabRig2/';
+Remote_Comm_remoteprefix = '/Volumes/remote/';  % should end in file separator ('/' or '\')
  % the prefix to the same directory as viewed by the OTHER computer
 
  % Example, suppose your "master" computer is a PC running Windows, and you 
