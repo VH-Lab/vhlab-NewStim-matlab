@@ -71,6 +71,10 @@ StimComputer = 0;       % is this a stimulus computer?
 
 StimWindowUseCLUTMapping = 0; % most users will say 0
 NewStimPeriodicStimUseDrawTexture = 1; % most users will say 1
+StimWindowFlip = 0; % most users will say 0
+StimWindowFlipHorizontal = 1; % only enabled if NSUsePsychImagingMode is 1
+StimWindowFlipVertical = 1;   % only enabled if NSUsePsychImagingMode is 1
+
 
 MonitorWindowGlobals;
 MonitorWindowMonitor = 0;  % use the given monitor, 0 is first

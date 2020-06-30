@@ -28,3 +28,6 @@
 %
 
 global StimWindow StimWindowMonitor StimWindowDepth StimWindowRefresh StimWindowRect StimComputer StimScreenBG StimWindowPreviousCLUT StimWindowUseCLUTMapping
+global StimWindowFlip
+global StimWindowFlipHorizontal
+global StimWindowFlipVertical
