@@ -1,4 +1,4 @@
-function NewStimCalibrate;
+NSUsePsychImagingMode function NewStimCalibrate2
 
 % NewStimCalibrate.m
 %
@@ -72,8 +72,8 @@ StimComputer = 0;       % is this a stimulus computer?
 StimWindowUseCLUTMapping = 0; % most users will say 0
 NewStimPeriodicStimUseDrawTexture = 1; % most users will say 1
 StimWindowFlip = 0; % most users will say 0
-StimWindowFlipHorizontal = 1; % only enabled if NSUsePsychImagingMode is 1
-StimWindowFlipVertical = 1;   % only enabled if NSUsePsychImagingMode is 1
+StimWindowFlipHorizontal = 1; % only enabled if StimWindowFlip is 1
+StimWindowFlipVertical = 1;   % only enabled if StimWindowFlip is 1
 
 
 MonitorWindowGlobals;
