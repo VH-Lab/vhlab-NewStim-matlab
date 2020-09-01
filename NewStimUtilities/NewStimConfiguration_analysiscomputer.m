@@ -1,4 +1,4 @@
-NSUsePsychImagingMode function NewStimCalibrate2
+function NewStimCalibrate
 
 % NewStimCalibrate.m
 %
