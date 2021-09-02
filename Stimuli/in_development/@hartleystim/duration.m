@@ -1,14 +1,9 @@
-function t = duration(PSstim)
+function t = duration(Hstim)
 
-PSparams = struct(PSstim.PSparams);
-
-if isfield(PSparams,'loops'),
-        loops = PSparams.loops;
-else, loops = 0;
-end;
+Hparams = struct(Hstim.Hparams);
 
 StimWindowGlobals;
-if ~haspsychtbox|isempty(StimWindowRefresh)|~isloaded(PSstim),
+if ~haspsychtbox|isempty(StimWindowRefresh)|~isloaded(HSstim),
 	t = (PSparams.nCycles*(loops+1)) / PSparams.tFrequency + duration(PSstim.stimulus);
 else, % calculate exactly
     df = struct(getdisplayprefs(PSstim));

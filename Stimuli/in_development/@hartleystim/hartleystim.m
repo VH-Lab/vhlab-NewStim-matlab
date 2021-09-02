@@ -1,4 +1,4 @@
-function [pso] = hartleystim(Hparams,OLDSTIM);
+function [hso] = hartleystim(Hparams,OLDSTIM);
 
 % HARTLEYSTIM - a stimulus that produces the subspace sampling of Ringach et al. 1997
 %
@@ -21,31 +21,35 @@ function [pso] = hartleystim(Hparams,OLDSTIM);
 %  
 %  [1x4] rect      -   The rectangle on the screen where the stimulus will be
 %                      displayed:  [ top_x top_y bottom_x bottom_y ].
-%                      The square of M pixels will be centered on the rectangle.
+%                      If the rectangle is smaller than MxM pixels^2, then
+%                      the stimulus will be centered on the rectangle and cut off.
+%                      If the rectangle is bigger than the MxM pixel^2 stimulus,
+%                      then the stimulus will be scaled to the size of the rectangle.
 %
-%  windowShape     -   0 rectangle,1 oval
-%  distance        -   distance of the monitor from the viewer.
-%  M               -   The number of pixels in the stimulus.
-%  K_absmax        -   The maximum value of K to use. Must be <= M.
-%  L_absmax        -   The maximum value of L to use. Must be <= M.
-%  contrast        -   0-1: 0 means no diff from background, 1 is max difference
+%  windowShape     -   0 rectangle,1 oval (default 0)
+%  distance        -   distance of the monitor from the viewer (default 57)
+%  M               -   The number of pixels in the stimulus (default 500)
+%  K_absmax        -   The maximum value of K to use. Must be <= M (default 12)
+%  L_absmax        -   The maximum value of L to use. Must be <= M (default 12)
+%  sfmax           -   spatial frequency will be less than SF max (default inf)
+%  contrast        -   0-1: 0 means no diff from background, 1 is max difference (default 1)
 %  chromhigh       -   RGB value of maximum luminance (default 255*[1 1 1])
 %  chromlow        -   RGB value of minimum luminance (default 0*[1 1 1])
 %  background      -   luminance of the background (0-1 from chromlow to chromhigh)
 %  backdrop        -   luminance of area outside of display region
 %                       If [1x1] then it is 0-1 from chromlow to chromhigh
 %                       If [1x3] then it specifies actual rgb color
-%  [1x1] N            - Number of frames to make
-%  [1x1] fps          - Speed at which to show the frames, in frames per second.
-% [35x1] randState    - The random state to use as the seed for generating
-%                       the random numbers.  Ex:rand('state').  See 'help rand'.
+%  [1x1] reps      -   Number of times to repeat each frame (default 15)
+%  [1x1] fps       -   Speed at which to show the frames, in frames per second (default 10)
+% [35x1] randState -   The random state to use as the seed for generating
+%                         the random numbers.  Ex:rand('state').  See 'help rand'.
 %
 %  See also:  STIMULUS, PERIODICSTIM, STOCHASTICGRIDSTIM, PERIODICSCRIPT
 
 NewStimListAdd('hartleystim');
 
 if nargin==0,
-	pso = hartleystim('default');
+	hso = hartleystim('default');
 	return;
 end;
 
@@ -61,10 +65,11 @@ default_p = struct( ...
 	'backdrop',		0.5,			...
 	'windowShape',		1,			...
 	'M',			500,			...
-	'K_absmax',		50,			...
-	'L_absmax',		50,			...
-	'N'			1000,			...
-	'fps'			10,			...
+	'K_absmax',		20,			...
+	'L_absmax',		20,			...
+	'sfmmax',		2,			...
+	'reps',			15,			...
+	'fps',			10,			...
 	'randState',		rand('state')		...
                            );
 default_p.dispprefs = {};
@@ -82,8 +87,8 @@ if ischar(Hparams),
 		error('Unknown string input into periodicstim.');
 	end;
 else,   % they are just parameters
-	[good, err] = verifyperiodicstim(Hparams);
-	if ~good, error(['Could not create periodicstim: ' err]); end;
+	[good, err] = verifyhartleystims(Hparams);
+	if ~good, error(['Could not create Hartley stim: ' err]); end;
 end;
 
 if finish,
@@ -105,11 +110,7 @@ if finish,
 		
 	end;
 
-	if isfield(Hparams,'loops'), loops = Hparams.loops; else, loops = 0; end;
-
-	if isfield(Hparams,'aperature'), Hparams.aperture = Hparams.aperature; % correct steve's bad bad spelling
-	elseif isfield(Hparams,'aperture'), Hparams.aperature = Hparams.aperture;  % correct for steve's bad bad spelling
-	end;
+	frames = [];
 
 	frames = (1:tRes*Hparams.nCycles);
 	loopdir = 1;
@@ -123,44 +124,21 @@ if finish,
 		loops = loops - 1;
 	end;
 	
-	% Special case: animType == 1  %% actually let's just forget this as a special case even though it wastes some time
-	%if (Hparams.animType == 1) % if a square wave, only 2 frames:  ON and OFF
-	%	fps = 0.5 * Hparams.tFrequency;
-	%	disp(['here']);
-		%f = Hparams.tFrequency;
-		%t = 0.00001 + (0:1/StimWindowRefresh:Hparams.nCycles/f);
-		%x = zeros(size(t)); x(find(sin(f*2*pi*t)<0)) = 1; x(find(sin(f*2*pi*t)>=0)) = 2;
-	%	frames = repmat(1:2,1,Hparams.nCycles);  % x
-	%end;
-
 	oldRect = Hparams.rect;
 	width = oldRect(3) - oldRect(1); height = oldRect(4)-oldRect(2);
 	dims = max(width,height);
 	newrect = [oldRect(1) oldRect(2) oldRect(1)+dims oldRect(2)+dims];
-	if Hparams.windowShape>=2&Hparams.windowShape<=8,
-		extra = 0; if Hparams.windowShape>=4, extra = 90; end;
-		angle = mod(Hparams.angle+extra,360)/180*pi;
-		trans = [cos(angle) -sin(angle); sin(angle) cos(angle)];
-		ctr = [mean(oldRect([1 3])) mean(oldRect([2 4]))];
-		cRect=(trans*([oldRect([1 2]);oldRect([3 2]);...
-				oldRect([3 4]);oldRect([1 4])]-...
-				repmat(ctr,4,1))')'+repmat(ctr,4,1);
-		dimnew = [max(cRect(:,1))-min(cRect(:,1)) ...
-					max(cRect(:,2))-min(cRect(:,2))];
-		ID = max(dimnew);
-		newrect = ([-ID -ID ID ID]/2+repmat(ctr,1,2));
-	end;
 
 	dp={'fps',fps, ...
 	'rect',newrect, ...
 	'frames',frames,Hparams.dispprefs{:} };
 	s = stimulus(5);
 	data = struct('Hparams', Hparams);
-	pso = class(data,'periodicstim',s);
-	pso.stimulus = setdisplayprefs(pso.stimulus,displayprefs(dp));
+	hso = class(data,'hartleystim',s);
+	hso.stimulus = setdisplayprefs(hso.stimulus,displayprefs(dp));
 	
 else
-	pso = [];
+	hso = [];
 end;
 
 
