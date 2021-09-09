@@ -34,4 +34,4 @@ end;
 
 clear Hparams Hstim;
 
-colors = workspace2struct;
+colors = vlt.data.workspace2struct();

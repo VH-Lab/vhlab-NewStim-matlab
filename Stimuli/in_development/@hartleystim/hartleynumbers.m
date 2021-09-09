@@ -1,7 +1,7 @@
-function [s,kx,ky] = hartleynumbers(HSstim)
+function [s,kxv,kyv] = hartleynumbers(HSstim)
 % HARTLEYNUMBERS - calculate Hartley numbers for a Hartley stimulus
 %
-% [S,KX,KY] = HARTLEYNUMBERS(HSSTIM)
+% [S,KXV,KYV] = HARTLEYNUMBERS(HSSTIM)
 %
 % Given the stimulus parameters and the random seed, calculate the full
 % list of Hartley numbers to be shown (or that were shown).
@@ -16,32 +16,17 @@ function [s,kx,ky] = hartleynumbers(HSstim)
 % KY is the Y number of frame
 % 
 
-[KX_values,KY_values] = hartleyrange(HSstim);
+[s, kxv, kyv] = hartleyrange(HSstim);
+N = numel(s); % number of stims without reps
 
 Hp = getparameters(HSstim);
 
-[KXmesh,KYmesh] = meshgrid(KX_values,KY_values);
-KXmesh = KXmesh(:);
-KYmesh = KYmesh(:);
-not_origin = find( ~(KXmesh==0 & KYmesh==0));
-KXmesh = KXmesh(not_origin);
-KYmesh = KYmesh(not_origin);
-
-num_of_stims = numel(KXmesh)*2; % number of stims, and one for each sign
-
 currentState = rand('state');
 rand('state',Hp.randState);
-order = vlt.stats.pseudorandomorder(num_of_stims,Hp.reps);
+order = vlt.stats.pseudorandomorder(N,Hp.reps);
 rand('state',currentState); % restore state
 
-s = 2*(mod(order,2)-0.5,2);
-value = mod(order,numel(KXmesh));
-value(find(value==0)) = numel(KXmesh);
-
-kx = KXmesh(value);
-ky = KYmesh(value);
-
-s = s(:);
-kx = kx(:);
-ky = ky(:);
+s = s(order(:));
+kxv = kxv(order(:));
+kyv = kyv(order(:));
 

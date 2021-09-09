@@ -87,51 +87,15 @@ if ischar(Hparams),
 		error('Unknown string input into periodicstim.');
 	end;
 else,   % they are just parameters
-	[good, err] = verifyhartleystims(Hparams);
+	[good, err] = verifyhartleystim(Hparams);
 	if ~good, error(['Could not create Hartley stim: ' err]); end;
 end;
 
 if finish,
-	
-	cpustr = computer;
-	if (strcmp(cpustr,'MAC2')),  % if we have a Mac
-		
-		StimWindowGlobals;
-		tRes = round( (1/Hparams.tFrequency) * StimWindowRefresh);
-		% screen frames / cycle
-		
-		%compute displayprefs info
-		
-		fps = StimWindowRefresh;
-		
-	else,  % we're just initializing
-		tRes = 5;
-		fps = -1;
-		
-	end;
+	N = 100; % need to calculate rigorously
+	dp = {'fps', Hparams.fps, 'rect', Hparams.rect, 'frames', 1:Hparams.reps * N, ...
+		Hparams.dispprefs{:}};
 
-	frames = [];
-
-	frames = (1:tRes*Hparams.nCycles);
-	loopdir = 1;
-	while loops>0,
-		loopdir = loopdir * -1;
-		if loopdir>0,
-			frames = [frames 1:tRes*Hparams.nCycles];
-		else,
-			frames = [frames tRes*Hparams.nCycles:-1:1,];
-		end;
-		loops = loops - 1;
-	end;
-	
-	oldRect = Hparams.rect;
-	width = oldRect(3) - oldRect(1); height = oldRect(4)-oldRect(2);
-	dims = max(width,height);
-	newrect = [oldRect(1) oldRect(2) oldRect(1)+dims oldRect(2)+dims];
-
-	dp={'fps',fps, ...
-	'rect',newrect, ...
-	'frames',frames,Hparams.dispprefs{:} };
 	s = stimulus(5);
 	data = struct('Hparams', Hparams);
 	hso = class(data,'hartleystim',s);
