@@ -11,9 +11,21 @@ end;
 
 Hstim = unloadstim(Hstim);
 
+Hp = getparameters(Hstim);
+
+M = Hp.M;
+
 StimWindowGlobals;
 
-  % create a clipping region
+[s,kxv,kyv] = hartleyrange(Hstim);
+
+N = numel(s); % number of stimuli in 1 rep
+
+F = sqrt(kxv(1:N/2).^2+kyv(1:N/2).^2)/M;
+phase_center = mod(2*pi*(1/M)*(kxv*(M-1)/2)+kyv*(M-1)/2, 2*pi);
+
+offscreen = 
+
 
  % SPATIAL PARAMETERS %%%%%%%%%
 [spatialphase, pixelIncrement, wLeng, destination_rect, width_offscreen, height_offscreen] = spatial_phase(Hstim);
