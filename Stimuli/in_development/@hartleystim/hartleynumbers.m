@@ -1,7 +1,7 @@
-function [s,kxv,kyv] = hartleynumbers(HSstim)
+function [s,kxv,kyv,order] = hartleynumbers(HSstim)
 % HARTLEYNUMBERS - calculate Hartley numbers for a Hartley stimulus
 %
-% [S,KXV,KYV] = HARTLEYNUMBERS(HSSTIM)
+% [S,KXV,KYV,ORDER] = HARTLEYNUMBERS(HSSTIM)
 %
 % Given the stimulus parameters and the random seed, calculate the full
 % list of Hartley numbers to be shown (or that were shown).
@@ -10,6 +10,7 @@ function [s,kxv,kyv] = hartleynumbers(HSstim)
 % function call.
 %
 % S, KX, and KY are column vectors, with one entry per Hartley frame.
+% ORDER indicates the stimulus number (from HARTLEYRANGE) of each stimulus.
 %
 % S is the sign of each frame (+/- 1)
 % KX is the X number of each frame 
@@ -25,6 +26,8 @@ currentState = rand('state');
 rand('state',Hp.randState);
 order = vlt.stats.pseudorandomorder(N,Hp.reps);
 rand('state',currentState); % restore state
+
+order = order(:); % make sure a column
 
 s = s(order(:));
 kxv = kxv(order(:));

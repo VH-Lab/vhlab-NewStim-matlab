@@ -236,5 +236,17 @@ elseif ischar(stimclass),
 			stim = quicktimestim(p);
 		case 'flashimageseqstim',
 			stim = flashimageseqstim('default');
+		case 'hartleystim',
+			stim = hartleystim('default');
+			p = getparameters(stim);
+			p.M = 300;
+			p.rect = [ 300 300 600 600];
+			p.reps = 1;
+			p.fps = 2;
+			p.K_absmax = 3;
+			p.L_absmax = 3;
+			p.sfmax = 0.3;
+			p.windowShape = 1;
+			stim = hartleystim(p);
 	end;
 end;
