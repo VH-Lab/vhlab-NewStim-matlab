@@ -14,8 +14,8 @@ Hp = getparameters(Hstim);
 rect = Hp.rect;  % this is the rect requested by the user
 width=rect(3)-rect(1); height=rect(4)-rect(2);
 
-width_offscreen = 2*width;
-height_offscreen =2*height;
+width_offscreen = 3*width;
+height_offscreen =3*height;
 
 destrect = CenterRect([0 0 width_offscreen height_offscreen],rect);
 

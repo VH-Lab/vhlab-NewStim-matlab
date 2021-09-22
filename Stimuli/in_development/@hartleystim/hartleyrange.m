@@ -28,8 +28,8 @@ F_ = F*pixels_per_degree; % convert to cycles per degree of visual angle
 
 [I,J] = find(F_<=Hp.sfmmax & F_>0);
 
-kxv = kxv(I);
-kyv = kyv(J);
+kxv = kxv(J);
+kyv = kyv(I);
 
 kxv = [kxv(:) ; kxv(:)];
 kyv = [kyv(:) ; kyv(:)];

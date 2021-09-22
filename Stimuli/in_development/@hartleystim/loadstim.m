@@ -22,7 +22,7 @@ StimWindowGlobals;
 N = numel(s); % number of stimuli in 1 rep, always even because s takes -/+ 1 
 
 F = sqrt(kxv(1:N/2).^2+kyv(1:N/2).^2)/M;  
-phase_center = mod(2*pi*(1/M)*(kxv(1:N/2)*(M-1)/2)+kyv(1:N/2)*(M-1)/2, 2*pi);
+phase_center = mod(2*pi*(1/M)*((kxv(1:N/2)*(M-1)/2)+(kyv(1:N/2)*(M-1)/2)), 2*pi);
 
 if mod(M,2)==0,
         pixel_coords = (-M-1):(2*M)-1+1;
@@ -56,7 +56,7 @@ img_colorized = cat(3,vlt.math.rescale(im_offscreen,[-1 1],[colors.low_rgb(1) co
 stimnum = mod(order_,N/2);
 stimnum(stimnum==0) = N/2;
 
-selection = [ (-(M-1)) (M+1) ];
+selection = [ (-(M-1)) (M+1) ]; 
 
 frames = ones(numel(s_),1); % the same offscreen image provides all of the stimulus images
 
@@ -81,7 +81,8 @@ center_shift = round(1./(2*sqrt((kxv_(:)).^2+(kyv_(:)).^2)/M))-1;
 sourcerect_ = [center_default+selection(1)-1-0*eps stimnum(:)-1 center_default+selection(2)-1 stimnum(:)-1+eps]  + ...
 	(s_==-1).*[center_shift zeros(numel(stimnum),1) center_shift zeros(numel(stimnum),1)];
 
-ds_userfield.Movie_angles = 90+vlt.data.rowvec(vlt.math.rad2deg(atan2(kyv_,kxv_)));
+ds_userfield.Movie_filter = 0*frames;
+ds_userfield.Movie_angles = 90-vlt.data.rowvec(vlt.math.rad2deg(atan2(kxv_,kyv_)));
 ds_userfield.Movie_sourcerects = sourcerect_'; % must be 4xN frames
 
 % calculate destination rectangle - we will draw a bigger rectangle but then clip out all but the viewing region below
@@ -111,7 +112,6 @@ DS_stim = displaystruct(dS_stim);
 ds_userfield = MovieParams2MTI(DS_stim,DP_stim); % to add to the next 
 
 
-disp('now on to clipping')
 clip_tex = [];
 
 if Hp.windowShape>-1,
@@ -124,7 +124,6 @@ if Hp.windowShape>-1,
 	dp_clip = {'fps',Hp.fps,'rect',clip_dest_rect,'frames',frames,Hp.dispprefs{:} };
 	DP_clip = displayprefs(dp_clip);
 	moviefields_clip = MovieParams2MTI(DS_clip,DP_clip);
-	disp('now to cat userfields')
 	ds_userfield = MovieParamsCat(ds_userfield,moviefields_clip);
 end;
 
@@ -137,11 +136,6 @@ dS = { 'displayType', 'Movie', 'displayProc', displayProc, ...
 disp('about to set display prefs')
 Hstim = setdisplayprefs(Hstim,DP_stim);
 
-ds_userfield.Movie_sourcerects(:,1,:)
-ds_userfield.Movie_destrects(:,1,:)
-
-%keyboard
- 
 outstim = Hstim;
 outstim.stimulus = setdisplaystruct(outstim.stimulus,displaystruct(dS));
 outstim.stimulus = loadstim(outstim.stimulus);
