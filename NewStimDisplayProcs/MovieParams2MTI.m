@@ -32,6 +32,9 @@ function [moviefields] = MovieParams2MTI(ds, df)
 %                              [1xNxM],where N is the number of frames in df.frames
 %                              and M is the number of textures.
 %                              Default value is 0.
+%   'Movie_filters'        A list of DrawTexture filters to use. 1 is the default. See DrawTextures 
+%                              documentation in Psychtoolbox. [1xN] where N is the number of frames
+%                              in df.frames.
 %   'Movie_globalalphas'   A list of global alphas for the DrawTexture command
 %                              [1xNxM], where N is the number of frames in df.frames,
 %                              and M is the number of textures.
@@ -83,7 +86,12 @@ if strcmp(ds.displayType,'Movie') | strcmp(ds.displayType,'MultiMovie'),
 	else,
 		for i=1:length(df.frames), moviefields.Movie_textures{i} = df.frames(i); end;
 	end;
+	if isfield(ds.userfield,'Movie_filters'),
+		moviefields.Movie_filters = ds.userfield.Movie_filters;
+	else,
+		moviefields.Movie_filters = ones(1,numel(df.frames));
+	end;
 else,
-    moviefields = [];
+	moviefields = [];
 end;
 

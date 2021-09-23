@@ -124,7 +124,7 @@ elseif strcmp(MTI.ds.displayType,'Movie')&strcmp(MTI.ds.displayProc,'standard'),
 		frameNum = 1;
 		textures = MTI.MovieParams.Movie_textures{frameNum};
 		Screen('DrawTextures',StimWindow,MTI.ds.offscreen(textures),squeeze(MTI.MovieParams.Movie_sourcerects(:,frameNum,textures)),squeeze(MTI.MovieParams.Movie_destrects(:,frameNum,textures)),...
-				squeeze(MTI.MovieParams.Movie_angles(:,frameNum,textures)),0,squeeze(MTI.MovieParams.Movie_globalalphas(:,frameNum,textures)));
+				squeeze(MTI.MovieParams.Movie_angles(:,frameNum,textures)),MTI.MovieParams.Movie_filters(frameNum),squeeze(MTI.MovieParams.Movie_globalalphas(:,frameNum,textures)));
 		if StimWindowUseCLUTMapping, Screen('LoadNormalizedGammaTable',StimWindow,linspace(0,1,256)' * ones(1,3),1); end;
 		vbl = Screen('Flip',StimWindow,0);
 		frameTimes(1) = StimTriggerAct('Stim_afterframe_trigger',MTI.stimid,1);
@@ -133,7 +133,7 @@ elseif strcmp(MTI.ds.displayType,'Movie')&strcmp(MTI.ds.displayProc,'standard'),
 		for frameNum=2:length(MTI.df.frames);
 			textures = MTI.MovieParams.Movie_textures{frameNum};
 			Screen('DrawTextures',StimWindow,MTI.ds.offscreen(textures),squeeze(MTI.MovieParams.Movie_sourcerects(:,frameNum,textures)),squeeze(MTI.MovieParams.Movie_destrects(:,frameNum,textures)),...
-					squeeze(MTI.MovieParams.Movie_angles(:,frameNum,textures)),0,squeeze(MTI.MovieParams.Movie_globalalphas(:,frameNum,textures)));
+					squeeze(MTI.MovieParams.Movie_angles(:,frameNum,textures)),MTI.MovieParams.Movie_filters(frameNum),squeeze(MTI.MovieParams.Movie_globalalphas(:,frameNum,textures)));
 			if StimWindowUseCLUTMapping, Screen('LoadNormalizedGammaTable',StimWindow,linspace(0,1,256)' * ones(1,3),1); end;
 			vbl=Screen('Flip',StimWindow,vbl+(MTI.pauseRefresh(frameNum-1)-0.5)/StimWindowRefresh);
 			frameTimes(frameNum) = StimTriggerAct('Stim_afterframe_trigger',MTI.stimid,frameNum);

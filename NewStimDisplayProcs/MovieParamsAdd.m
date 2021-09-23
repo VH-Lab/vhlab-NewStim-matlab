@@ -37,6 +37,7 @@ moviefields.Movie_destrects = cat(3,mf1.Movie_destrects,zeros(4,frames1,textures
 moviefields.Movie_destrects = cat(2,moviefields.Movie_destrects, cat(3,zeros(4,frames2,textures1),mf2.Movie_destrects));
 moviefields.Movie_angles = cat(3,mf1.Movie_angles,zeros(1,frames1,textures2));
 moviefields.Movie_angles = cat(2,moviefields.Movie_angles, cat(3,zeros(1,frames2,textures1),mf2.Movie_angles) );
+moviefields.Movie_filters = cat(2,mf1.Movie_filters,mf2.Movie_filters);
 moviefields.Movie_globalalphas = cat(3,mf1.Movie_globalalphas,zeros(1,frames1,textures2));
 moviefields.Movie_globalalphas = cat(2,moviefields.Movie_globalalphas, cat(3,zeros(1,frames2,textures1),mf2.Movie_globalalphas) );
 

@@ -6,6 +6,7 @@ function [moviefields] = MovieParamsCat(varargin)
 %   must be present for this feature to work.  To fill all of these out with
 %   default values, you might call the function
 %        MOVIEFIELDS=MOVIEPARAMS2MTI(DS,DF) before calling MOVIEPARAMSCAT.
+%   Because movies can only have one filter mode, the first structure's filters field is used.
 %
 %   MOVIEFIELDS = MOVIEPARAMSCAT(MOVIEFIELDS1,MOVIEFIELDS2,...)
 %
@@ -23,6 +24,7 @@ mf2 = varargin{2};
 moviefields.Movie_sourcerects = cat(3,mf1.Movie_sourcerects,mf2.Movie_sourcerects);
 moviefields.Movie_destrects = cat(3,mf1.Movie_destrects,mf2.Movie_destrects);
 moviefields.Movie_angles = cat(3,mf1.Movie_angles,mf2.Movie_angles);
+moviefields.Movie_filters = mf1.Movie_filters;
 moviefields.Movie_globalalphas = cat(3,mf1.Movie_globalalphas,mf2.Movie_globalalphas);
 
 for i=1:length(mf1.Movie_textures),

@@ -81,7 +81,7 @@ center_shift = round(1./(2*sqrt((kxv_(:)).^2+(kyv_(:)).^2)/M))-1;
 sourcerect_ = [center_default+selection(1)-1-0*eps stimnum(:)-1 center_default+selection(2)-1 stimnum(:)-1+eps]  + ...
 	(s_==-1).*[center_shift zeros(numel(stimnum),1) center_shift zeros(numel(stimnum),1)];
 
-ds_userfield.Movie_filter = 0*frames;
+ds_userfield.Movie_filters = 0*frames;
 ds_userfield.Movie_angles = 90-vlt.data.rowvec(vlt.math.rad2deg(atan2(kxv_,kyv_)));
 ds_userfield.Movie_sourcerects = sourcerect_'; % must be 4xN frames
 

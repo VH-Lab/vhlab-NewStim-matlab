@@ -242,7 +242,7 @@ elseif ischar(stimclass),
 			p.M = 300;
 			p.rect = [ 000 000 600 600];
 			p.reps = 1;
-			p.fps = 2;
+			p.fps = 20;
 			p.K_absmax = 3;
 			p.L_absmax = 3;
 			p.sfmax = 0.3;
