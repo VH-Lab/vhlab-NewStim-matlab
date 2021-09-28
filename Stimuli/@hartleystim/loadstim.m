@@ -79,7 +79,7 @@ eps = 0.0001;
 center_default = floor(size(im_offscreen,2)/2) + zeros(numel(stimnum),1);
 center_shift = round(1./(2*sqrt((kxv_(:)).^2+(kyv_(:)).^2)/M))-1;
 sourcerect_ = [center_default+selection(1)-1-0*eps stimnum(:)-1 center_default+selection(2)-1 stimnum(:)-1+eps]  + ...
-	(s_==-1).*[center_shift zeros(numel(stimnum),1) center_shift zeros(numel(stimnum),1)];
+	repmat((s_==-1),1,4).*[center_shift zeros(numel(stimnum),1) center_shift zeros(numel(stimnum),1)];
 
 ds_userfield.Movie_filters = 0*frames;
 ds_userfield.Movie_angles = 90-vlt.data.rowvec(vlt.math.rad2deg(atan2(kxv_,kyv_)));
@@ -133,7 +133,7 @@ dS = { 'displayType', 'Movie', 'displayProc', displayProc, ...
          'offscreen', [hartley_tex clip_tex ], 'frames', frames, 'clut_usage', clut_usage, 'depth', 8, ...
 	 'clut_bg', clut_bg, 'clut', clut, 'clipRect', [] , 'makeClip', 0,'userfield',ds_userfield };
 
-disp('about to set display prefs')
+%disp('about to set display prefs')
 Hstim = setdisplayprefs(Hstim,DP_stim);
 
 outstim = Hstim;
