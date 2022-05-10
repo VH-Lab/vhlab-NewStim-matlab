@@ -1,4 +1,4 @@
-# vhlab_mltbx_NewStim
+# vhlab-toolbox-matlab
 A visual (and auditory) stimulus suite for Matlab that relies on Psychtoolbox
 
 To actual show visual stimuli or to use the accessory devices, this library depends on having the Psychophysics Toolbox installed.
