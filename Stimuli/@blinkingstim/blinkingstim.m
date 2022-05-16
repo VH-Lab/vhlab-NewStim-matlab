@@ -2,8 +2,12 @@ function [bls] = blinkingstim(BLSp, OLDSTIM)
 
 % [BLS] = BLINKINGSTIM(BLSp)
 %
-%  Blinks all squares of an imaginary grid on the screen.  BLSp can
-%  either be the string 'graphical' (in which case the user is
+%  Blinks all squares of an imaginary grid on the screen.  In a BLINKINGSTIM,
+%  each square is blinked one at a time. This differs from STOCHASTICGRIDSTIM,
+%  where squares in the grid are modulated randomly on every frame. The blinking
+%  stimulus can drive the blinks in either 'sequential' or 'random' order (see parameters).
+%
+%  BLSp can either be the string 'graphical' (in which case the user is
 %  prompted for the remaining parameters), the string 'default' (in which case
 %  default parameter values are used) or it can be a structure as described
 %  below.  
@@ -37,6 +41,8 @@ function [bls] = blinkingstim(BLSp, OLDSTIM)
 %               instead. (ex: [25 25])
 %  randState -  35x1 Random state to use (ex: rand('state'))
 %  dispprefs -  cell displayprefs options (or use '{}' for defaults)
+%
+%  See also: STOCHASTICGRIDSTIM
 %
 %                              Questions to vanhoosr@brandeis.edu
 
