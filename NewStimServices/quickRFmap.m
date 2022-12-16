@@ -35,7 +35,7 @@ ShowStimScreen;
 
 % % % Make monitor window
 fpos=Screen('Rect',MonitorWindowMonitor)-50; %set 50 px inside upper Rt corner
-fpos=[0 0 420 410];
+fpos=[0 0 500 500];
 oldVerbosity=Screen('Preference','Verbosity',1); %supress annoying outputs?
 close(findobj('Name','Quick RF mapping'))
 fig=figure('WindowStyle','normal','Position',fpos,'Name','Quick RF mapping',...
@@ -97,6 +97,9 @@ han.surroundwidth=uicontrol(txt,'position',[x+sh2   340+sh   90    22],'string',
 
 
 uicontrol(but,'position',[x   270+sh   140    22],'string','Run','Callback',{@runthis,han});
+
+ch = get(fig,'children');
+set(ch,'units','normalized');
 
 
 function runthis(src,eventdata,han)
@@ -230,6 +233,8 @@ try
                 break;
             elseif seconds-lastSec>keypressint 
                 keyname=KbName(keyCode);
+                char(keyname),
+                keyname
                 switch keyname
                     case 'b'
                         drift=~drift;
@@ -245,7 +250,7 @@ try
                     case 'v'
                         contrast=contrast+0.1; if contrast>=1, contrast=1; end
                     case 'x',
-			if contrast>0, contrast = 0; else, contrast = 1; end;
+            			if contrast>0, contrast = 0; else, contrast = 1; end;
                     case 'f' % toggle full screen
                         mask=~mask;
                         sizechange=1;
@@ -255,10 +260,10 @@ try
                             surround=~surround;
                             if surround,    masktex=masktexsurround; else masktex=masktexfull; end
                         end
-                    case {'[{',']}'} % change surround width size. requires recalc of make tex.
+                    case {'[{',']}','bracketleft','bracketright'} % change surround width size. requires recalc of make tex.
                         if mask
                             
-                            if strcmp(keyname,'[{') % make smaller
+                            if strcmp(keyname,'[{') | strcmpi(keyname,'bracketleft')% make smaller
                                 surroundwidth=surroundwidth-surroundinc;
                             else % make larger
                                 surroundwidth=surroundwidth+surroundinc;
@@ -291,9 +296,9 @@ try
                             myrect=CenterRect(mskrect,drect);
                             sizechange=1;
                         end
-                    case {',', '<', '.', '>', ',<', '.>'}
+                    case {',', '<', '.', '>', ',<', '.>','comma','period'}
                         if mask
-                            if strcmp(keyname,',')|strcmp(keyname,'<')|strcmp(keyname,',<') %make smaller
+                            if strcmp(keyname,',')|strcmp(keyname,'<')|strcmp(keyname,',<')|strcmp(keyname,'comma') %make smaller
                                 rad=rad-gratinginc;
                             else
                                 rad=rad+gratinginc;
@@ -328,17 +333,17 @@ try
                             myrect=CenterRect(mskrect,drect);
                             sizechange=1;
                         end
-                    case 'UpArrow'
+                    case {'UpArrow','Up'},
                         myrect=myrect-[0 arrowinc 0 arrowinc];
-                    case 'DownArrow'
+                    case {'DownArrow','Down'}
                         myrect=myrect+[0 arrowinc 0 arrowinc];
-                    case 'LeftArrow'
+                    case {'LeftArrow','Left'},
                         myrect=myrect-[arrowinc 0 arrowinc 0];
-                    case 'RightArrow'
+                    case {'RightArrow','Right'}
                         myrect=myrect+[arrowinc 0 arrowinc 0];
-                    case '-_'
+                    case {'-_','minus'}
                         ang=mod(ang-anginc,360);
-                    case '=+'
+                    case {'=+','equal'}
                         ang=mod(ang+anginc,360);
                     case 'space'
                         WaitSecs(1);
@@ -405,6 +410,14 @@ try
         end
 %         if ~isequal(myrect,drect); keyboard; end
     end
+    pos=[drect(3)-(drect(3)-drect(1))/2, drect(4)-(drect(4)-drect(2))/2];
+    set(han.ang,'String',num2str(mod(ang-90,360)));
+    set(han.contrast,'String',num2str(contrast));
+    set(han.pos,'String',num2str(pos));
+    set(han.rad,'String',num2str(rad));
+    set(han.surroundwidth,'String',num2str(surroundwidth));
+    drawnow;
+    
     ListenChar(0);     Priority(0);     ShowCursor;
     Screen('FillRect',w,bgcolor); % change fill to new bg color
     Screen('Flip',w);

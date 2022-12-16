@@ -41,15 +41,18 @@ displayProc = 'blinkstim';
 
   % make an offscreen image for each color to show
 offscreen = zeros(1,2);
-image1 = repmat(uint8(1),X,Y);
-image2 = repmat(uint8(0),X,Y);
+
 
 if NS_PTBv<3,
 	offscreen(1) = screen(-1,'OpenOffscreenWindow',255,[0 0 X Y]);
-	screen(offscreen(1),'PutImage',image1,[0 0 X Y]);
+    image1 = repmat(uint8(1),X,Y);
+    image2 = repmat(uint8(0),X,Y);
+    screen(offscreen(1),'PutImage',image1,[0 0 X Y]);
 	offscreen(2) = screen(-1,'OpenOffscreenWindow',255,[0 0 X Y]);
 	screen(offscreen(2),'PutImage',image2,[0 0 X Y]);
 else,
+    image1 = cat(3,repmat(BLstim.value(1,1),X,Y),repmat(BLstim.value(1,2),X,Y),repmat(BLstim.value(1,3),X,Y));
+    image2 = cat(3,repmat(BLstim.BG(1,1),X,Y),repmat(BLstim.BG(1,2),X,Y),repmat(BLstim.BG(1,3),X,Y));
 	offscreen(1) = Screen('MakeTexture',StimWindow,image1);
 	offscreen(2) = Screen('MakeTexture',StimWindow,image2);
 end;

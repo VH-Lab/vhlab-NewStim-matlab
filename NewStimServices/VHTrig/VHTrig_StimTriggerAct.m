@@ -4,7 +4,7 @@ function [thetime,thecode]=VHTrig_StimTriggerAct(myDev,theaction,code,code2)
 %
 %  Performs triggering action for Van Hooser lab, Mac OS X with USB-1208FS
 %
-%    Port 0 is stimid, 0..255
+%    Port 0 is stimid, 0..255 (code is modulus 256..so 257 is 1 e.g.)
 %    Port 1 is stimtrigger (low bit, probably channel 30),
 %              frame trigger (channel 31)
 %              pre-time trigger (channel 32)
@@ -32,8 +32,8 @@ switch theaction,
 	case 'Stim_BGpost_trigger',
 		DaqDOut(daq,1,1-stimonset);
 	case 'Stim_OFFSET_trigger',
-		DaqDOut(daq,0,0);
 		DaqDOut(daq,1,1-stimonset);
+        DaqDOut(daq,0,0);
 	case 'Script_Start_trigger',
 		DaqDOut(daq,1,1-stimonset);
 		DaqDOut(daq,0,0);
@@ -74,4 +74,4 @@ end;
 thetime = GetSecs;
 
 function DaqDOut(daq,port,code)
-PsychHID('SetReport',daq,2,4,uint8([0 port code]));
+PsychHID('SetReport',daq,2,4,uint8([0 port mod(code,256)]));
