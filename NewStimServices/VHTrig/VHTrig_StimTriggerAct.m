@@ -33,7 +33,7 @@ switch theaction,
 		DaqDOut(daq,1,1-stimonset);
 	case 'Stim_OFFSET_trigger',
 		DaqDOut(daq,1,1-stimonset);
-        DaqDOut(daq,0,0);
+		DaqDOut(daq,0,0); % don't edit the stimulus number until AFTER the stim trigger is set or Micro1401 might get confused
 	case 'Script_Start_trigger',
 		DaqDOut(daq,1,1-stimonset);
 		DaqDOut(daq,0,0);

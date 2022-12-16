@@ -40,6 +40,7 @@ switch Remote_Comm_method,
 case 'filesystem',
 	while 1,  % needs control-C to exit
 		pause(2);
+		clc;
 		cd(theDir); % refresh file directory
 		disp('Waiting for remote commands...press COMMAND-PERIOD (APPLE-.) to interrupt.');
 	
